@@ -9,7 +9,10 @@ profileImg.addEventListener("click", (e) => {
   hiddenMenu.classList.toggle("open-menu");
 });
 
+// this means when any of the body is click the menu list will disappear
 document.body.addEventListener("click", (e) => {
+
+  //this means if i click anyplace that is not inside  menu, then close the menu
   if (!hiddenMenu.contains(e.target)) {
     hiddenMenu.classList.remove("open-menu");
   }
@@ -34,16 +37,13 @@ const currentUser = {
 
 
 
-/* ================= UTIL ================= */
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-/* ================= STATE ================= */
-// let posts = [];
 let selectedMedia = [];
 const STORAGE_KEY = "linkedin_demo_posts";
 
  let posts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
-posts = posts.map(normalizePost);
+posts = posts.map(normalizePost);//this fixed old data to work with new code.normalizePost function will be apply to all post
 save();
 
 
@@ -62,8 +62,12 @@ mediaPreview.addEventListener("dragleave", () => mediaPreview.classList.remove("
 mediaPreview.addEventListener("drop", e => {
     e.preventDefault();
     mediaPreview.classList.remove("drag");
-    handleFiles(e.dataTransfer.files);
+    handleFiles(e.dataTransfer.files);q
 });
+
+
+
+
 
 function handleFiles(files) {
     Array.from(files).forEach(file => {
@@ -333,7 +337,8 @@ function renderPreview() {
       });
     }
 
-    /* ================= MOBILE BUTTONS (LINKEDIN STYLE) ================= */
+    //.......................................  MOBILE BUTTONS (LINKEDIN STYLE) 
+    
     if (isMobile) {
       const upBtn = document.createElement("button");
       upBtn.textContent = "↑";
@@ -472,12 +477,12 @@ el.appendChild(editBtn)
 
 
 
-// ===== EDIT TEXT =====
+// -- EDIT TEXT --
 const editTextarea = document.createElement("textarea");
 editTextarea.value = post.content || "";
 editTextarea.classList.add('hidden','text')
 
-// ===== EDIT MEDIA INPUT =====
+// ----- EDIT MEDIA INPUT -----
 const editMediaInput = document.createElement("input");
 
 editMediaInput.type = "file";
@@ -509,7 +514,7 @@ el.appendChild(line)
 
 
 
-        /* ========= ACTIONS ========= */
+        //...........................................................ACTIONS 
         const actions = document.createElement("div");
         actions.className = "actions";
 
@@ -604,7 +609,7 @@ redoBtn.onclick = () => redoPost(post);
 
 
 
-        /* ========= COMMENTS ========= */
+        // COMMENT.........................
         const commentBox = document.createElement("div");
         
         commentBox.id = `comment-box-${post.id}`;
@@ -703,11 +708,7 @@ function deletePost(id) {
 
 
 
-/* ================= COMMENTS ================= */
 
-// function toggleComment(id) {
-//     document.getElementById(`comment-box-${id}`).classList.toggle("hidden");
-// }
 
 
 // addComment function................................
@@ -724,6 +725,7 @@ function addComment(postId) {
         user: currentUser.name,
         text: text,
         likes: [],
+
         time: new Date()
     });
 
@@ -742,7 +744,7 @@ let activePost = null;
 function openComments(post) {
   activePost = post;
 
-  // ✅ SAFETY: ensure comments always exists
+  //  SAFETY: ensure comments always exists
   if (!activePost.comments) {
     activePost.comments = [];
   }
@@ -786,16 +788,19 @@ function renderSheetComments() {
 
     // TEXT
     const text = document.createElement("div");
-    // text.className = "comment-text";
-    // text.innerHTML = `<strong>${comment.user}</strong> ${comment.text}`;
+
 
     text.innerHTML = `
-  <strong class='authors'>${comment.user}</strong>
-  <br>
+    
+      <h1 class='authors'>   ${comment.user}</h1>
+
+  
   <span class='smelly'>${currentUser.role}</span>
   
     <span class="smaller">${formatTime(comment.time)}</span>
-<br><br>
+
+    <br><br>
+
   <div class="comment-text">${comment.text}</div>
 `;
 
@@ -811,12 +816,11 @@ function renderSheetComments() {
 
 
 
-   // 💬 REPLY TOGGLE
+   // REPLY TOGGLE
      const replyToggle = document.createElement("button");
     const replyCount = comment.replies?.length || 0;
     replyToggle.innerHTML = replyCount ? `Replied ·${replyCount}`: `<svg xmlns="http://www.w3.org/2000/svg" width='24' height='24' viewBox="0 0 24 24" fill="#00b3ff"><path d="M11 20L1 12L11 4V9C16.5228 9 21 13.4772 21 19C21 19.2727 20.9891 19.5428 20.9677 19.81C19.5055 17.0364 16.6381 15.119 13.313 15.0053L13 15H10.9999L11 20ZM8.99986 13H10.9999L13.0341 13.0003L13.3814 13.0065C14.6657 13.0504 15.9053 13.3165 17.0568 13.7734C15.5898 12.0749 13.4204 11 11 11H9V8.16125L4.20156 12L8.99992 15.8387L8.99986 13Z"></path></svg> reply`;
 
-//     actions.append(likeBtn, replyToggle);
 
 
 
@@ -844,7 +848,7 @@ function renderSheetComments() {
     (comment.replies || []).forEach(r => {
       const rDiv = document.createElement("div");
       rDiv.className = "reply";
-      rDiv.innerHTML =` <strong>${r.user}</strong> ${r.text}`;
+      rDiv.innerHTML =` <P>${r.user}</P> <P class='smelly'>${currentUser.role}</P>   <br>  <P>${r.text} </P> `;
       replies.appendChild(rDiv);
     });
 
@@ -1063,54 +1067,6 @@ document.getElementById("emojiBtn").onclick = () => {
 };
 
 
-// function postSheetComment(e) {
-//   e.preventDefault();
-
-//   if (!activePost) return;
-
-//   // ✅ SAFETY AGAIN
-//   if (!activePost.comments) {
-//     activePost.comments = [];
-//   }
-
-//   const input = document.getElementById("sheetInput");
-//   const text = input.value.trim();
-
-//   if (!text) return;
-
-//   activePost.comments.push({
-//     user: currentUser.name,
-//     text,
-//     time: Date.now()
-//   });
-
-//   input.value = "";
-//   save();
-//   renderSheetComments();
-// }
-
-
-
-
-
-// let startY = 0;
-
-// const sheet = document.getElementById("commentSheet");
-
-// sheet.addEventListener("touchstart", e => {
-//   startY = e.touches[0].clientY;
-// });
-
-// sheet.addEventListener("touchmove", e => {
-//   const diff = e.touches[0].clientY - startY;
-//   if (diff > 120) closeCommentSheet();
-// });
-
-// function closeCommentSheet() {
-//   sheet.classList.add("hidden");
-//   activePost = null;
-// }
-
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1144,69 +1100,6 @@ function likeSheetComment(commentId) {
 
 
 
-
-// function replyToComment(commentId, text) {
-//   const c = activePost.comments.find(c => c.id === commentId);
-//   if (!c) return;
-
-//   c.replies.push({
-//     id: Date.now(),
-//     user: currentUser.name,
-//     text,
-//     time: new Date()
-//   });
-
-//   save();
-//   renderSheetComments();
-// }
-
-// // ;''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''......
-
-// const commentOverlay = document.getElementById("commentOverlay");
-// const commentList = document.getElementById("commentList");
-// const commentInput = document.getElementById("commentInput");
-// const sendCommentBtn = document.getElementById("sendComment");
-// const closeCommentsBtn = document.getElementById("closeComments");
-
-// let activePost = null;
-
-// function openComments(post) {
-//     activePost = post;
-//     commentOverlay.classList.remove("hidden");
-//     renderComments();
-// }
-
-// function closeComments() {
-//     commentOverlay.classList.add("hidden");
-//     commentInput.value = "";
-//     activePost = null;
-// }
-
-// closeCommentsBtn.onclick = closeComments;
-
-// function renderComments() {
-//     commentList.innerHTML = "";
-
-//     activePost.comments.forEach(c => {
-//         const div = document.createElement("div");
-//         div.textContent =` ${c.author}: ${c.text}`;
-//         commentList.appendChild(div);
-//     });
-// }
-
-// sendCommentBtn.onclick = () => {
-//     if (!commentInput.value.trim()) return;
-
-//     activePost.comments.push({
-//         author: currentUser.name,
-//         text: commentInput.value,
-//         time: Date.now()
-//     });
-
-//     save();
-//     closeComments();   // 🔥 LinkedIn-style behavior
-//     renderFeed();      // refresh feed count
-// };
 
 renderFeed();
 
@@ -1270,34 +1163,6 @@ function redoPost(post) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let showMoreLink = document.querySelector("#show-more-link");
-
-// let sidebarActivity = document.querySelector(".sidebar-activity");
-
-// showMoreLink.addEventListener("click", () => {
-//   sidebarActivity.classList.toggle("open-activity");
-
-//   if (sidebarActivity.classList.contains("open-activity")) {
-//     showMoreLink.innerHTML = "Show less <b>-</b>";
-//   } else {
-//     showMoreLink.innerHTML = "Show more <b>+</b>";
-//   }
-// });
 
 
 
