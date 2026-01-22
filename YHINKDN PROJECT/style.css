@@ -1030,6 +1030,12 @@ button {
     color: #0a66c2;
     font-weight: bold;
     margin-right: 10px;
+    transition:  color 0.5s;
+}
+
+
+button:hover{
+  color: var(--hover-links);
 }
 .actions {
     margin-top: 8px;
